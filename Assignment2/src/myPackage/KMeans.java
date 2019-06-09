@@ -1,45 +1,49 @@
 package myPackage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class KMeans {
 
+	public static ArrayList<State> statesList = new ArrayList<State>();
 	static double[][] values = null;
 	static double[][] centroids = null;
+
 	static double[][] cluster1 = null;
 	static double[][] cluster2 = null;
 	static double[][] cluster3 = null;
 	static double[][] cluster4 = null;
 
-	static ArrayList<String> type = new ArrayList<String>();
-
-	static ArrayList<String> type1 = new ArrayList<String>();
-	static ArrayList<String> type2 = new ArrayList<String>();
-	static ArrayList<String> type3 = new ArrayList<String>();
-	static ArrayList<String> type4 = new ArrayList<String>();
-
 	static int index1, index2, index3, index4;
 	static double dist1, dist2, dist3, dist4;
 
 	public static void execute(double[][] input) {
+
+		statesList = DataBase.getStatesList();
 		values = input;
 		initialize();
 		cal_centroids();
 		K_clusters();
 
-		System.out.println(type1.size());
-		System.out.println(type2.size());
-		System.out.println(type3.size());
-		System.out.println(type4.size());
+		System.out.println("Cluster 1 = " + index1 + " states.");
+		System.out.println("Cluster 2 = " + index2 + " states.");
+		System.out.println("Cluster 3 = " + index3 + " states.");
+		System.out.println("Cluster 4 = " + index4 + " states.");
 
+		System.out.println("Centroids:");
 		System.out
 				.println(Arrays.deepToString(centroids).replace("], ", "]\n"));
+
+		results();
+		print_CSV();
 	}
 
 	public static void initialize() {
 
-		int s = values.length; // Number of states
+		int s = statesList.size(); // Number of states
 		int m = values[0].length; // Number of measurements per state
 
 		centroids = new double[4][m];
@@ -84,6 +88,7 @@ public class KMeans {
 					if (dist1 < dist4) {
 						for (int j = 0; j < m; j++) {
 							cluster1[index1][j] = values[i][j];
+							statesList.get(i).label = "cluster1";
 
 						}
 						index1++;
@@ -91,7 +96,7 @@ public class KMeans {
 					} else {
 						for (int j = 0; j < m; j++) {
 							cluster4[index4][j] = values[i][j];
-
+							statesList.get(i).label = "cluster4";
 						}
 						index4++;
 					}
@@ -100,14 +105,14 @@ public class KMeans {
 				else if (dist3 < dist4) {
 					for (int j = 0; j < m; j++) {
 						cluster3[index3][j] = values[i][j];
-
+						statesList.get(i).label = "cluster3";
 					}
 					index3++;
 
 				} else {
 					for (int j = 0; j < m; j++) {
 						cluster4[index4][j] = values[i][j];
-
+						statesList.get(i).label = "cluster4";
 					}
 					index4++;
 
@@ -116,13 +121,14 @@ public class KMeans {
 				if (dist2 < dist4) {
 					for (int j = 0; j < m; j++) {
 						cluster2[index2][j] = values[i][j];
+						statesList.get(i).label = "cluster2";
 					}
 					index2++;
 
 				} else {
 					for (int j = 0; j < m; j++) {
 						cluster4[index4][j] = values[i][j];
-
+						statesList.get(i).label = "cluster4";
 					}
 					index4++;
 
@@ -132,14 +138,14 @@ public class KMeans {
 			else if (dist3 < dist4) {
 				for (int j = 0; j < m; j++) {
 					cluster3[index3][j] = values[i][j];
-
+					statesList.get(i).label = "cluster3";
 				}
 				index3++;
 
 			} else {
 				for (int j = 0; j < m; j++) {
 					cluster4[index4][j] = values[i][j];
-
+					statesList.get(i).label = "cluster4";
 				}
 				index4++;
 
@@ -193,10 +199,6 @@ public class KMeans {
 		double tol = 0.00001;
 
 		while (true) {
-			type1.clear();
-			type2.clear();
-			type3.clear();
-			type4.clear();
 
 			for (int i = 0; i < index1; i++) {
 				for (int j = 0; j < m; j++) {
@@ -249,18 +251,16 @@ public class KMeans {
 						if (dist1 < dist4) {
 							for (int j = 0; j < m; j++) {
 								cluster1[index1][j] = values[i][j];
-
+								statesList.get(i).label = "cluster1";
 							}
 							index1++;
-							type1.add(String.valueOf(i));
 
 						} else {
 							for (int j = 0; j < m; j++) {
 								cluster4[index4][j] = values[i][j];
-
+								statesList.get(i).label = "cluster4";
 							}
 							index4++;
-							type4.add(String.valueOf(i));
 
 						}
 					}
@@ -268,36 +268,32 @@ public class KMeans {
 					else if (dist3 < dist4) {
 						for (int j = 0; j < m; j++) {
 							cluster3[index3][j] = values[i][j];
-
+							statesList.get(i).label = "cluster3";
 						}
 						index3++;
-						type3.add(String.valueOf(i));
 
 					} else {
 						for (int j = 0; j < m; j++) {
 							cluster4[index4][j] = values[i][j];
-
+							statesList.get(i).label = "cluster4";
 						}
 						index4++;
-						type4.add(String.valueOf(i));
 
 					}
 				} else if (dist2 < dist3) {
 					if (dist2 < dist4) {
 						for (int j = 0; j < m; j++) {
 							cluster2[index2][j] = values[i][j];
-
+							statesList.get(i).label = "cluster2";
 						}
 						index2++;
-						type2.add(String.valueOf(i));
 
 					} else {
 						for (int j = 0; j < m; j++) {
 							cluster4[index4][j] = values[i][j];
-
+							statesList.get(i).label = "cluster4";
 						}
 						index4++;
-						type4.add(String.valueOf(i));
 
 					}
 				}
@@ -305,18 +301,16 @@ public class KMeans {
 				else if (dist3 < dist4) {
 					for (int j = 0; j < m; j++) {
 						cluster3[index3][j] = values[i][j];
-
+						statesList.get(i).label = "cluster3";
 					}
 					index3++;
-					type3.add(String.valueOf(i));
 
 				} else {
 					for (int j = 0; j < m; j++) {
 						cluster4[index4][j] = values[i][j];
-
+						statesList.get(i).label = "cluster4";
 					}
 					index4++;
-					type4.add(String.valueOf(i));
 
 				}
 
@@ -359,4 +353,90 @@ public class KMeans {
 		}
 
 	}
+
+	public static void results() {
+
+		double[] angles = new double[statesList.size()];
+		double[] volts = new double[statesList.size()];
+
+		for (int i = 0; i < statesList.size(); i++) {
+			statesList.get(i).calculations();
+			angles[i] = statesList.get(i).meanAngle;
+			volts[i] = statesList.get(i).meanVoltage;
+		}
+		System.out.println(Arrays.toString(angles));
+		System.out.println(Arrays.toString(volts));
+
+		double[] centAngles = new double[centroids.length];
+		double[] centVolts = new double[centroids.length];
+
+		for (int i = 0; i < centroids.length; i++) {
+			double sumAngles = 0;
+			double sumVolts = 0;
+			for (int j = 0; j < values[0].length; j++) {
+				if (j % 2 == 0) {
+					sumVolts += centroids[i][j];
+				} else {
+					sumAngles += centroids[i][j];
+				}
+			}
+			centAngles[i] = sumAngles / (values[0].length / 2);
+			centVolts[i] = sumVolts / (values[0].length / 2);
+		}
+		System.out.println(Arrays.toString(centAngles));
+		System.out.println(Arrays.toString(centVolts));
+	}
+
+	public static void print_CSV() {
+		PrintWriter pw;
+		try {
+			ArrayList<PrintWriter> pwArray = new ArrayList<PrintWriter>();
+			for (int i = 0; i < 4; i++) {
+				String name = "cluster_" + (i + 1) + ".csv";
+				pw = new PrintWriter(new File(name));
+				pwArray.add(pw);
+			}
+
+			for (int ii = 0; ii < 4; ii++) {
+				StringBuilder sb = new StringBuilder();
+				String header = "time,";
+				for (int j = 0; j < (values[0].length); j++) {
+					int mod = j % 2;
+					if (j < (values[0].length) - 1) {
+						if (mod == 0) {
+							header += "ANG_" + ((j / 2) + 1) + ",";
+						} else {
+							header += "VOL_" + (j / 2 + 1) + ",";
+						}
+					} else {
+						if (mod == 0) {
+							header += "ANG_" + ((j / 2) + 1) + ",";
+						} else {
+							header += "VOL_" + (j / 2 + 1) + "\n";
+						}
+					}
+				}
+				sb.append(header);
+				for (int i = 0; i < statesList.size(); i++) {
+					if (statesList.get(i).label.equals("cluster"
+							+ String.valueOf(ii + 1))) {
+						String line = statesList.get(i).time + ","
+								+ statesList.get(i).stringValues();
+						sb.append(line);
+					}
+				}
+				pw = pwArray.get(ii);
+				pw.write(sb.toString());
+				pw.close();
+			}
+
+			System.out.println("CSV created!");
+
+		} catch (FileNotFoundException e) {
+
+			System.out.println("Problem occured while writing the CSV file!!!");
+			// e.printStackTrace();
+		}
+	}
+
 }

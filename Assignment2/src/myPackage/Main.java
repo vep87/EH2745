@@ -7,5 +7,4 @@ public class Main {
 		double[][] values = DataBase.read_data(fileName);
 		KMeans.execute(values);
 	}
-
 }

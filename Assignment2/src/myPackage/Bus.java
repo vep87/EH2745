@@ -6,20 +6,20 @@ public class Bus {
 	public double angle;
 
 	Bus() {
-		busID 	= "";
+		busID = "";
 		voltage = 0;
-		angle 	= 0;
+		angle = 0;
 	}
-	
-	public void addBusID(String busID){
+
+	public void addBusID(String busID) {
 		this.busID = busID;
 	}
 
-	public void addBusVoltage(double voltage){
+	public void addBusVoltage(double voltage) {
 		this.voltage = voltage;
 	}
-	
-	public void addBusAngle(double angle){
+
+	public void addBusAngle(double angle) {
 		this.angle = angle;
 	}
 }

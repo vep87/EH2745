@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class State {
 
 	public double time;
-	public String label;
-	public double[] minAngle, maxAngle, minVoltage, maxVoltage;
 	public ArrayList<Bus> buses = new ArrayList<Bus>();
+	public double meanAngle, meanVoltage;
+	public String label;
 
 	public State(Measurement readMeasurement) {
 
@@ -70,5 +70,30 @@ public class State {
 			}
 		}
 	}
+
+	public void calculations() {
+		int nBuses = buses.size();
+		double sumAngles = 0;
+		double sumVolts = 0;
+		for (int i = 0; i < nBuses; i++) {
+			sumAngles += buses.get(i).angle;
+			sumVolts += buses.get(i).voltage;
+		}
+		meanAngle = sumAngles/buses.size();
+		meanVoltage = sumVolts/buses.size();
+	}
 	
+	public String stringValues(){
+		String s = "";
+		for(int k=0; k<buses.size(); k++){
+			s += Double.toString(buses.get(k).angle)+",";
+			s += Double.toString(buses.get(k).voltage);
+			if(k!=(buses.size()-1)){
+				System.out.print("\t");
+				s += ",";
+			}
+		}
+		s += "\n";
+		return s;
+	}
 }
