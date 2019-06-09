@@ -20,10 +20,10 @@ public class KMeans {
 	static int index1, index2, index3, index4;
 	static double dist1, dist2, dist3, dist4;
 
-	public static void execute(double[][] input) {
+	public static void execute(DataBase input) {
 
-		statesList = DataBase.getStatesList();
-		values = input;
+		statesList = input.getStatesList();
+		values = input.getValues();
 		initialize();
 		cal_centroids();
 		K_clusters();
@@ -58,7 +58,6 @@ public class KMeans {
 			centroids[1][i] = values[3 * x][i];
 			centroids[2][i] = values[5 * x][i];
 			centroids[3][i] = values[7 * x][i];
-
 		}
 
 		index1 = 0;
