@@ -28,7 +28,6 @@ public class KMeans {
 		cal_centroids();
 		K_clusters();
 		results();
-		print_CSV();
 	}
 
 	public static void initialize() {
@@ -341,13 +340,13 @@ public class KMeans {
 
 		}
 		
-
+		System.out.println("Clusters identified...");
 		System.out.println("Cluster 1 = " + index1 + " states.");
 		System.out.println("Cluster 2 = " + index2 + " states.");
 		System.out.println("Cluster 3 = " + index3 + " states.");
 		System.out.println("Cluster 4 = " + index4 + " states.");
 
-		System.out.println("Centroids:");
+		System.out.println("Centroids...");
 		System.out
 				.println(Arrays.deepToString(centroids).replace("], ", "]\n"));
 
@@ -380,17 +379,17 @@ public class KMeans {
 			centAngles[i] = sumAngles / (values[0].length / 2);
 			centVolts[i] = sumVolts / (values[0].length / 2);
 		}
-		System.out.println("Centroids locations...");
+		System.out.println("Centroids locations:");
 		System.out.println(Arrays.toString(centAngles));
 		System.out.println(Arrays.toString(centVolts));
 	}
 
-	public static void print_CSV() {
+	public static void print_CSV(String outputDirectory) {
 		PrintWriter pw;
 		try {
 			ArrayList<PrintWriter> pwArray = new ArrayList<PrintWriter>();
 			for (int i = 0; i < 4; i++) {
-				String name = "Cluster_" + (i + 1) + ".csv";
+				String name = outputDirectory+"/Cluster_" + (i + 1) + ".csv";
 				pw = new PrintWriter(new File(name));
 				pwArray.add(pw);
 			}
@@ -432,7 +431,7 @@ public class KMeans {
 
 		} catch (FileNotFoundException e) {
 
-			System.out.println("Problem occured while writing the CSV file!!!");
+			System.out.println("Error exporting CSV files");
 			// e.printStackTrace();
 		}
 	}

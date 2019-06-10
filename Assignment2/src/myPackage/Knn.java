@@ -32,7 +32,7 @@ public class Knn {
 
 				for (int k = 0; k < colLearn; k++) {
 
-					dist = dist + Math.pow((lValues[j][k] - tValues[i][k]), 2);
+					dist += Math.pow((lValues[j][k] - tValues[i][k]), 2);
 				}
 
 				double distance = Math.sqrt(dist);
@@ -58,7 +58,7 @@ public class Knn {
 					c3++;
 					break;
 				case "cluster4":
-					c3++;
+					c4++;
 					break;
 				}
 			}
@@ -85,7 +85,6 @@ public class Knn {
 				testStatesList.get(i).label = "cluster3";
 			} else {
 				testStatesList.get(i).label = "cluster4";
-
 			}
 
 		}
@@ -94,58 +93,57 @@ public class Knn {
 			System.out.println(testStatesList.get(x).label);
 		}
 		
-		print_CSV_test(testData);
-		
+			
 	}
 	
-	public static void print_CSV_test(DataBase testData) {
+	public static void print_CSV_test(DataBase testData, String outputDirectory) {
 		PrintWriter pw;
 		try {
 			ArrayList<PrintWriter> pwArray = new ArrayList<PrintWriter>();
 			for (int i = 0; i < 4; i++) {
-				String name = "TestCluster_" + (i + 1) + ".csv";
+				String name = outputDirectory+"/Test_Cluster_" + (i + 1) + ".csv";
 				pw = new PrintWriter(new File(name));
 				pwArray.add(pw);
 			}
 
-			for (int ii = 0; ii < 4; ii++) {
+			for (int k = 0; k < 4; k++) {
 				StringBuilder sb = new StringBuilder();
-				String header = "time,";
+				String header = "Time,";
 				for (int j = 0; j < (testData.getValues()[0].length); j++) {
 					int mod = j % 2;
 					if (j < (testData.getValues()[0].length) - 1) {
 						if (mod == 0) {
-							header += "ANG_" + ((j / 2) + 1) + ",";
+							header += "Angle_" + ((j / 2) + 1) + ",";
 						} else {
-							header += "VOL_" + (j / 2 + 1) + ",";
+							header += "Voltage_" + (j / 2 + 1) + ",";
 						}
 					} else {
 						if (mod == 0) {
-							header += "ANG_" + ((j / 2) + 1) + ",";
+							header += "Angle_" + ((j / 2) + 1) + ",";
 						} else {
-							header += "VOL_" + (j / 2 + 1) + "\n";
+							header += "Voltage_" + (j / 2 + 1) + "\n";
 						}
 					}
 				}
 				sb.append(header);
 				for (int i = 0; i < testData.getStatesList().size(); i++) {
 					if (testData.getStatesList().get(i).label.equals("cluster"
-							+ String.valueOf(ii + 1))) {
+							+ String.valueOf(k + 1))) {
 						String line = testData.getStatesList().get(i).time + ","
 								+ testData.getStatesList().get(i).stringValues();
 						sb.append(line);
 					}
 				}
-				pw = pwArray.get(ii);
+				pw = pwArray.get(k);
 				pw.write(sb.toString());
 				pw.close();
 			}
 
-			System.out.println("CSV created!");
+			System.out.println("CSV files exported succesfully");
 
 		} catch (FileNotFoundException e) {
 
-			System.out.println("Problem occured while writing the CSV file!!!");
+			System.out.println("Error exporting CSV files");
 			// e.printStackTrace();
 		}
 	}
