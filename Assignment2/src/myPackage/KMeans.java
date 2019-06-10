@@ -21,22 +21,12 @@ public class KMeans {
 	static double dist1, dist2, dist3, dist4;
 
 	public static void execute(DataBase input) {
-
+		System.out.println("KMeans:");
 		statesList = input.getStatesList();
 		values = input.getValues();
 		initialize();
 		cal_centroids();
 		K_clusters();
-
-		System.out.println("Cluster 1 = " + index1 + " states.");
-		System.out.println("Cluster 2 = " + index2 + " states.");
-		System.out.println("Cluster 3 = " + index3 + " states.");
-		System.out.println("Cluster 4 = " + index4 + " states.");
-
-		System.out.println("Centroids:");
-		System.out
-				.println(Arrays.deepToString(centroids).replace("], ", "]\n"));
-
 		results();
 		print_CSV();
 	}
@@ -350,6 +340,16 @@ public class KMeans {
 			}
 
 		}
+		
+
+		System.out.println("Cluster 1 = " + index1 + " states.");
+		System.out.println("Cluster 2 = " + index2 + " states.");
+		System.out.println("Cluster 3 = " + index3 + " states.");
+		System.out.println("Cluster 4 = " + index4 + " states.");
+
+		System.out.println("Centroids:");
+		System.out
+				.println(Arrays.deepToString(centroids).replace("], ", "]\n"));
 
 	}
 
@@ -363,8 +363,6 @@ public class KMeans {
 			angles[i] = statesList.get(i).meanAngle;
 			volts[i] = statesList.get(i).meanVoltage;
 		}
-		System.out.println(Arrays.toString(angles));
-		System.out.println(Arrays.toString(volts));
 
 		double[] centAngles = new double[centroids.length];
 		double[] centVolts = new double[centroids.length];
@@ -382,6 +380,7 @@ public class KMeans {
 			centAngles[i] = sumAngles / (values[0].length / 2);
 			centVolts[i] = sumVolts / (values[0].length / 2);
 		}
+		System.out.println("Centroids locations...");
 		System.out.println(Arrays.toString(centAngles));
 		System.out.println(Arrays.toString(centVolts));
 	}
@@ -391,45 +390,45 @@ public class KMeans {
 		try {
 			ArrayList<PrintWriter> pwArray = new ArrayList<PrintWriter>();
 			for (int i = 0; i < 4; i++) {
-				String name = "cluster_" + (i + 1) + ".csv";
+				String name = "Cluster_" + (i + 1) + ".csv";
 				pw = new PrintWriter(new File(name));
 				pwArray.add(pw);
 			}
 
-			for (int ii = 0; ii < 4; ii++) {
+			for (int k = 0; k < 4; k++) {
 				StringBuilder sb = new StringBuilder();
-				String header = "time,";
+				String header = "Time,";
 				for (int j = 0; j < (values[0].length); j++) {
-					int mod = j % 2;
+					int test = j % 2;
 					if (j < (values[0].length) - 1) {
-						if (mod == 0) {
-							header += "ANG_" + ((j / 2) + 1) + ",";
+						if (test == 0) {
+							header += "Angle_" + ((j / 2) + 1) + ",";
 						} else {
-							header += "VOL_" + (j / 2 + 1) + ",";
+							header += "Voltage_" + (j / 2 + 1) + ",";
 						}
 					} else {
-						if (mod == 0) {
-							header += "ANG_" + ((j / 2) + 1) + ",";
+						if (test == 0) {
+							header += "Angle_" + ((j / 2) + 1) + ",";
 						} else {
-							header += "VOL_" + (j / 2 + 1) + "\n";
+							header += "Voltage_" + (j / 2 + 1) + "\n";
 						}
 					}
 				}
 				sb.append(header);
 				for (int i = 0; i < statesList.size(); i++) {
 					if (statesList.get(i).label.equals("cluster"
-							+ String.valueOf(ii + 1))) {
+							+ String.valueOf(k + 1))) {
 						String line = statesList.get(i).time + ","
 								+ statesList.get(i).stringValues();
 						sb.append(line);
 					}
 				}
-				pw = pwArray.get(ii);
+				pw = pwArray.get(k);
 				pw.write(sb.toString());
 				pw.close();
 			}
 
-			System.out.println("CSV created!");
+			System.out.println("CSV files exported succesfully");
 
 		} catch (FileNotFoundException e) {
 
